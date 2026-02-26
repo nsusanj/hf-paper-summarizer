@@ -18,13 +18,19 @@ def build_papers_context(papers: list[Paper]) -> str:
     for i, p in enumerate(papers, 1):
         authors_str = ", ".join(p.authors[:3])
         if len(p.authors) > 3:
-            authors_str += f" et al."
+            authors_str += " et al."
+
+        if p.full_text:
+            content_block = f"**Full Paper Text:**\n{p.full_text}"
+        else:
+            content_block = f"**Abstract (full text unavailable):**\n{p.abstract}"
+
         sections.append(
             f"## Paper {i}: {p.title}\n"
             f"**Authors:** {authors_str}\n"
             f"**Upvotes:** {p.upvotes}\n"
             f"**URL:** {p.url}\n\n"
-            f"**Abstract:**\n{p.abstract}"
+            f"{content_block}"
         )
     return "\n\n---\n\n".join(sections)
 
@@ -34,7 +40,7 @@ def generate_blog_post(papers: list[Paper], llm: LLMProvider) -> str:
     system_prompt = load_prompt("system.txt")
     papers_context = build_papers_context(papers)
     user_prompt = (
-        f"Here are today's top HuggingFace papers for you to turn into a blog post:\n\n"
+        f"Here are today's top HuggingFace papers. Write a blog post covering each one:\n\n"
         f"{papers_context}"
     )
     return llm.complete(system_prompt=system_prompt, user_prompt=user_prompt)

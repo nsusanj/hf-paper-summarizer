@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import httpx
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 
+from .arxiv_fetcher import fetch_full_text
 
 HF_API_URL = "https://huggingface.co/api/daily_papers"
 
@@ -17,6 +18,7 @@ class Paper:
     upvotes: int
     authors: list[str]
     paper_id: str  # arxiv ID, used to build URL
+    full_text: str | None = field(default=None)  # Full paper text from arxiv HTML
 
     @property
     def url(self) -> str:
@@ -50,6 +52,16 @@ def fetch_papers(target_date: date | None = None) -> list[Paper]:
         ))
 
     return papers
+
+
+def enrich_with_full_text(papers: list[Paper]) -> None:
+    """
+    Fetch full paper text from arxiv HTML for each paper, in place.
+    Papers without an HTML version will retain full_text=None.
+    """
+    for paper in papers:
+        print(f"  Fetching full text: {paper.title[:60]}...")
+        paper.full_text = fetch_full_text(paper.paper_id)
 
 
 def filter_papers(papers: list[Paper], upvote_threshold: int, max_papers: int) -> list[Paper]:

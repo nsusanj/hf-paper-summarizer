@@ -3,3 +3,5 @@ pyyaml
 python-dotenv
 google-genai
 anthropic        # Needed when switching to Claude; can remove during Gemini-only phase
+beautifulsoup4
+lxml
