@@ -1,5 +1,7 @@
 """Entry point — fetch papers, generate blog post, save to disk."""
 
+from __future__ import annotations
+
 import sys
 import yaml
 from datetime import date
@@ -11,7 +13,8 @@ from .summarizer import generate_blog_post
 from .formatter import save_post
 from .llm import get_provider
 
-CONFIG_PATH = Path(__file__).parent.parent / "config.yaml"
+PROJECT_ROOT = Path(__file__).parent.parent
+CONFIG_PATH = PROJECT_ROOT / "config.yaml"
 
 
 def load_config() -> dict:
@@ -20,7 +23,7 @@ def load_config() -> dict:
 
 
 def run(target_date: date | None = None) -> None:
-    load_dotenv()
+    load_dotenv(PROJECT_ROOT / ".env")
     config = load_config()
 
     # --- Fetch and filter papers ---

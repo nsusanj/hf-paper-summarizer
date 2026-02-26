@@ -1,5 +1,7 @@
 """Fetches and filters HuggingFace Daily Papers."""
 
+from __future__ import annotations
+
 import httpx
 from dataclasses import dataclass
 from datetime import date
@@ -41,8 +43,8 @@ def fetch_papers(target_date: date | None = None) -> list[Paper]:
         authors = [a.get("name", "") for a in paper_info.get("authors", [])]
         papers.append(Paper(
             title=paper_info.get("title", ""),
-            abstract=paper_info.get("abstract", ""),
-            upvotes=item.get("numComments", 0),  # HF API uses numComments for upvotes
+            abstract=paper_info.get("summary", ""),
+            upvotes=paper_info.get("upvotes", 0),
             authors=authors,
             paper_id=paper_id,
         ))

@@ -1,5 +1,7 @@
 """Saves generated blog posts to disk as Markdown files."""
 
+from __future__ import annotations
+
 from datetime import date
 from pathlib import Path
 

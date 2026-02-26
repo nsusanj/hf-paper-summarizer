@@ -85,7 +85,7 @@ General direction: technically substantive, witty, accessible, and opinionated-b
 ## Development Notes
 
 - HuggingFace Daily Papers API: `https://huggingface.co/api/daily_papers`
-  - Returns: title, abstract, upvote count (`likes`), authors, paper ID (links to arxiv)
+  - Returns: `paper.title`, `paper.summary` (abstract), `paper.upvotes`, `paper.authors[].name`, `paper.id` (arxiv ID)
 - Outputs should be valid Markdown, easily pasteable into Substack
 - Keep prompts in `prompts/` so tone/style can be iterated without touching code
 - When switching from Gemini to Claude: change `llm.provider` in `config.yaml` and set `ANTHROPIC_API_KEY`
