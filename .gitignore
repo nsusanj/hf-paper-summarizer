@@ -4,6 +4,5 @@ __pycache__/
 *.pyo
 .venv/
 venv/
-outputs/
 prompts/
 STYLE_NOTES.md
