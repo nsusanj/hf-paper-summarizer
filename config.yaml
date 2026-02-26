@@ -1,0 +1,12 @@
+# HuggingFace Paper Summarizer — Configuration
+
+papers:
+  upvote_threshold: 20      # Only include papers with this many upvotes or more
+  max_papers: 10            # Hard cap on papers per post (in case many exceed threshold)
+
+llm:
+  provider: gemini          # "gemini" (free, for prototyping) or "claude" (production)
+  model: null               # null = use provider default; override with e.g. "gemini-1.5-flash"
+
+output:
+  dir: outputs              # Directory for generated Markdown posts

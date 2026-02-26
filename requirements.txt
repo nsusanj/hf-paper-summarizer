@@ -1,0 +1,5 @@
+httpx
+pyyaml
+python-dotenv
+google-generativeai
+anthropic        # Needed when switching to Claude; can remove during Gemini-only phase
