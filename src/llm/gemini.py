@@ -4,7 +4,7 @@ import os
 from google import genai
 from .base import LLMProvider
 
-DEFAULT_MODEL = "gemini-1.5-flash"
+DEFAULT_MODEL = "gemini-2.5-flash"
 
 
 class GeminiProvider(LLMProvider):

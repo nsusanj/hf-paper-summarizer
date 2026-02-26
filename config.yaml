@@ -6,7 +6,7 @@ papers:
 
 llm:
   provider: gemini          # "gemini" (free, for prototyping) or "claude" (production)
-  model: null               # null = use provider default; override with e.g. "gemini-1.5-flash"
+  model: null               # null = use provider default; override with e.g. "gemini-2.0-flash"
 
 output:
   dir: outputs              # Directory for generated Markdown posts
