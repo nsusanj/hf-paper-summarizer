@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import sys
 import yaml
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
-from .fetcher import fetch_papers, filter_papers
+from .fetcher import fetch_papers, filter_papers, enrich_with_full_text
 from .summarizer import generate_blog_post
 from .formatter import save_post
 from .llm import get_provider
@@ -26,8 +26,12 @@ def run(target_date: date | None = None) -> None:
     load_dotenv(PROJECT_ROOT / ".env")
     config = load_config()
 
+    # Default to yesterday — today's papers haven't had time to accumulate upvotes
+    if target_date is None:
+        target_date = date.today() - timedelta(days=1)
+
     # --- Fetch and filter papers ---
-    print(f"Fetching HuggingFace Daily Papers for {target_date or 'today'}...")
+    print(f"Fetching HuggingFace Daily Papers for {target_date}...")
     papers = fetch_papers(target_date)
     print(f"  Found {len(papers)} total papers.")
 
@@ -37,8 +41,14 @@ def run(target_date: date | None = None) -> None:
     print(f"  {len(papers)} papers meet the {threshold}+ upvote threshold.")
 
     if not papers:
-        print("No papers met the threshold today. Exiting.")
+        print("No papers met the threshold. Exiting.")
         return
+
+    # --- Fetch full text from arxiv ---
+    print("Fetching full paper texts from arxiv...")
+    enrich_with_full_text(papers)
+    fetched = sum(1 for p in papers if p.full_text)
+    print(f"  Full text retrieved for {fetched}/{len(papers)} papers.")
 
     # --- Set up LLM ---
     llm_config = config["llm"]
@@ -56,6 +66,6 @@ def run(target_date: date | None = None) -> None:
 
 
 if __name__ == "__main__":
-    # Optional: pass a date as a CLI arg, e.g. python -m src.main 2024-01-15
+    # Optional: pass a date as a CLI arg, e.g. python -m src.main 2026-02-25
     target = date.fromisoformat(sys.argv[1]) if len(sys.argv) > 1 else None
     run(target_date=target)
