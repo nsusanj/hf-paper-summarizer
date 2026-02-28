@@ -1,12 +1,10 @@
 name: Daily Papers
 
 on:
-  schedule:
-    - cron: '0 8 * * *'  # 8 AM UTC daily
-  workflow_dispatch:       # allow manual runs from GitHub Actions tab
+  workflow_dispatch:  # manual runs only — daily automation handled by local launchd cron
 
 permissions:
-  contents: write          # needed to commit output back to repo
+  contents: write
 
 jobs:
   generate:
