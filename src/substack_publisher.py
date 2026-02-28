@@ -10,10 +10,9 @@ PUBLICATION_URL = "https://hfdailysummaries.substack.com"
 
 def publish_to_substack(content: str, post_date: date) -> str:
     """Publish a Markdown post to Substack. Returns the published post URL."""
-    email = os.environ["SUBSTACK_EMAIL"]
-    password = os.environ["SUBSTACK_PASSWORD"]
+    cookies = os.environ["SUBSTACK_COOKIES"]
 
-    api = Api(email=email, password=password, publication_url=PUBLICATION_URL)
+    api = Api(cookies_string=cookies, publication_url=PUBLICATION_URL)
     user_id = api.get_user_id()
 
     title = f"HF Papers — {post_date.strftime('%B')} {post_date.day}, {post_date.year}"

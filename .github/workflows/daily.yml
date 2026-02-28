@@ -34,8 +34,7 @@ jobs:
         run: python -m src.main
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          SUBSTACK_EMAIL: ${{ secrets.SUBSTACK_EMAIL }}
-          SUBSTACK_PASSWORD: ${{ secrets.SUBSTACK_PASSWORD }}
+          SUBSTACK_COOKIES: ${{ secrets.SUBSTACK_COOKIES }}
 
       - name: Commit output
         run: |

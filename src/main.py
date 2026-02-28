@@ -66,7 +66,7 @@ def run(target_date: date | None = None) -> None:
     print(f"Blog post saved to: {saved_path}")
 
     # --- Publish to Substack (only when credentials are present) ---
-    if os.environ.get("SUBSTACK_EMAIL") and os.environ.get("SUBSTACK_PASSWORD"):
+    if os.environ.get("SUBSTACK_COOKIES"):
         from .substack_publisher import publish_to_substack
         print("Publishing to Substack...")
         url = publish_to_substack(post_content, target_date)
