@@ -1,6 +1,7 @@
 """Publishes generated posts to Substack via the unofficial API."""
 
 import os
+import re
 from datetime import date
 from substack import Api
 from substack.post import Post
@@ -24,7 +25,11 @@ def publish_to_substack(content: str, post_date: date) -> str:
 
     title = f"HF Papers — {post_date.strftime('%B')} {post_date.day}, {post_date.year}"
     post = Post(title=title, subtitle="", user_id=user_id, audience="everyone")
-    post.from_markdown(content, api=api)
+    # python-substack treats a heading immediately followed by text (no blank line)
+    # as heading continuation, rendering the paragraph at heading size.
+    # Ensure a blank line after every heading line.
+    formatted = re.sub(r"(^#{1,6} .+)\n(?!\n)", r"\1\n\n", content, flags=re.MULTILINE)
+    post.from_markdown(formatted, api=api)
 
     draft = api.post_draft(post.get_draft())
     api.prepublish_draft(draft["id"])
