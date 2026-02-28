@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import sys
 import yaml
 from datetime import date, timedelta
@@ -63,6 +64,13 @@ def run(target_date: date | None = None) -> None:
     output_dir = config["output"]["dir"]
     saved_path = save_post(post_content, output_dir=output_dir, post_date=target_date)
     print(f"Blog post saved to: {saved_path}")
+
+    # --- Publish to Substack (only when credentials are present) ---
+    if os.environ.get("SUBSTACK_EMAIL") and os.environ.get("SUBSTACK_PASSWORD"):
+        from .substack_publisher import publish_to_substack
+        print("Publishing to Substack...")
+        url = publish_to_substack(post_content, target_date)
+        print(f"Published: {url}")
 
 
 if __name__ == "__main__":
