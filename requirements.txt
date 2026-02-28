@@ -2,7 +2,7 @@ httpx
 pyyaml
 python-dotenv
 google-genai
-anthropic        # Needed when switching to Claude; can remove during Gemini-only phase
+anthropic        # Used when llm.provider = "claude" in config.yaml
 beautifulsoup4
 lxml
 python-substack
