@@ -10,9 +10,16 @@ PUBLICATION_URL = "https://hfdailysummaries.substack.com"
 
 def publish_to_substack(content: str, post_date: date) -> str:
     """Publish a Markdown post to Substack. Returns the published post URL."""
-    cookies = os.environ["SUBSTACK_COOKIES"]
+    email = os.environ.get("SUBSTACK_EMAIL")
+    password = os.environ.get("SUBSTACK_PASSWORD")
+    cookies = os.environ.get("SUBSTACK_COOKIES")
 
-    api = Api(cookies_string=cookies, publication_url=PUBLICATION_URL)
+    if cookies:
+        api = Api(cookies_string=cookies, publication_url=PUBLICATION_URL)
+    elif email and password:
+        api = Api(email=email, password=password, publication_url=PUBLICATION_URL)
+    else:
+        raise EnvironmentError("Set SUBSTACK_COOKIES in .env (see .env.example for instructions).")
     user_id = api.get_user_id()
 
     title = f"HF Papers — {post_date.strftime('%B')} {post_date.day}, {post_date.year}"
@@ -23,5 +30,5 @@ def publish_to_substack(content: str, post_date: date) -> str:
     api.prepublish_draft(draft["id"])
     api.publish_draft(draft["id"])
 
-    slug = draft.get("slug", str(draft["id"]))
+    slug = draft.get("slug") or draft.get("id") or ""
     return f"{PUBLICATION_URL}/p/{slug}"
